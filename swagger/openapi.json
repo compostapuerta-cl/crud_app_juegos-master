@@ -1,0 +1,254 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "App de juegos",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8086",
+      "description": "Documentacion en local"
+    },
+    {
+      "url":"https://crudappjuegos-production.up.railway.app",
+      "description":"Documentacion online"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Game": {
+        "type": "object",
+        "properties": {
+          "_id":{
+            "type":"string",
+            "example":"6397d0203759a4c2a489f6e0"
+          },
+          "name":{
+            "type": "string",
+            "example": "Fifa"
+          },
+          "gender":{
+            "type":"string",
+            "example":"Deporte"
+          }
+        }
+      },
+      "User":{
+        "type":"object",
+        "properties":{
+          "userName":{
+            "type":"string",
+            "example":"Elvis"
+          },
+          "password":{
+            "type":"string || number",
+            "example":"***"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/games": {
+      "get": {
+        "summary": "Retorna una lista de juegos.",
+        "tags": [
+          "Games"
+        ],
+        "parameters":[
+          {
+            "name":"x-token",
+            "in":"header",
+            "description":"Token que debe ser enviado en cada peticion",
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Un array de objetos con los juegos disponibles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/Game"
+                  }
+                }
+              }
+            }
+          },
+          "401":{
+            "description":"'Token no valido' o 'No hay token en la peticion'"
+          }
+        }
+      },
+      "post": {
+        "summary": "Crea un juego",
+        "responses": {
+          "201": {
+            "description": "Creado exitosamente"
+          },
+          "400":{
+            "description":"El nombre del juego ya existe"
+          },
+          "401":{
+            "description":"'Token no valido' o 'No hay token en la peticion'"
+          }
+        },
+        "parameters":[
+          {
+            "name":"x-token",
+            "in":"header",
+            "description":"Token que debe ser enviado en cada peticion",
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "tags": [
+          "Games"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/Game"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/games/{id}": {
+      "get": {
+        "summary": "Retorna un juego dado un id",
+        "tags": [
+          "Games"
+        ],
+        "parameters":[
+          {
+            "name":"x-token",
+            "in":"header",
+            "description":"Token que debe ser enviado en cada peticion",
+            "schema":{
+              "type":"string"
+            }
+          },
+          {
+            "name":"id",
+            "in":"path",
+            "description":"Id que se debe mandar en el path de la url",
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Un objeto con los detalles del juego",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref":"#/components/schemas/Game"
+                }
+              }
+            }
+          }
+        },
+        "401":{
+          "description":"'Token no valido' o 'No hay token en la peticion'"
+        }
+      },
+      "delete":{
+        "summary":"Eliminar juego",
+        "tags":["Games"],
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "description":"Id que se debe mandar en el path de la url",
+            "schema":{
+              "type":"string"
+            }
+          },
+          {
+            "name":"x-token",
+            "in":"header",
+            "description":"Token que debe ser enviado en cada peticion",
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Borrado exitosamente"
+          },
+          "401":{
+            "description":"'Token no valido' o 'No hay token en la peticion'"
+          }
+        }
+      }
+    },
+    "/api/v1/register/create": {
+      "post": {
+        "summary": "Crear usuario",
+        "responses": {
+          "201": {
+            "description": "Creado correctamente"
+          },
+          "400":{
+            "description":"El nombre de usuario ya existe"
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref":"#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/register/login": {
+      "post": {
+        "summary": "Loguin de usuario",
+        "responses": {
+          "201": {
+            "description": "Creado correctamente"
+          },
+          "400":{
+            "description":"El nombre de usuario ya existe"
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref":"#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
